@@ -1,20 +1,12 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { getCompletedTasks } from '../../modules/taskManager';
 
-
-export default class Task {
-    id: number;
-    title: string;
-    description: string;
-    persona: string;
-    group: number;
-    completed: boolean;
-  
-    constructor(id: number, title: string, description: string, persona: string, group: number, completed: boolean = false) {
-      this.id = id;
-      this.title = title;
-      this.description = description;
-      this.persona = persona;
-      this.group = group;
-      this.completed = completed;
-    }
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'GET') {
+    const tasks = getCompletedTasks();
+    res.status(200).json(tasks);
+  } else {
+    res.setHeader('Allow', ['GET']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
-  
+}
